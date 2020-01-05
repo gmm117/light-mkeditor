@@ -72,6 +72,12 @@ app.on('ready', () =>{
             label: 'Hong\'s',
             submenu: [
                 {
+                  label : 'Markdown',
+                  click : function() {
+                      shell.openExternal('https://gmm117.github.io/light-mkeditor/');
+                  }
+                },
+                {
                     label : 'Blog',
                     click : function() {
                         shell.openExternal('https://gmm117.github.io/');
@@ -80,7 +86,7 @@ app.on('ready', () =>{
                 {
                     label : 'PortFolio',
                     click : function() {
-                        shell.openExternal('https://gmm117.github.io/portfolio/');
+                        shell.openExternal('https://gmm117.github.io/developer-portfolio/');
                     }
                 },
                 {
