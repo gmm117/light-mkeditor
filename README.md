@@ -25,7 +25,10 @@ $ npm install
 # webpack Run
 $ npm run build
 
-# Run the app
+# webpack deploy
+$ npm run deploy
+
+# electron Run the app 
 $ npm start
 ```
 
@@ -44,6 +47,9 @@ This software uses the following open source packages:
 - [Electron](http://electron.atom.io/)
 - [Node.js](https://nodejs.org/)
 - [Marked - a markdown parser](https://github.com/chjj/marked)
+- [webpack](https://webpack.js.org/)
+- [babel](https://babeljs.io/)
+- [npm](https://www.npmjs.com/)
 
 ## Support
 
