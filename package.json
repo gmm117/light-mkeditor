@@ -1,0 +1,36 @@
+{
+  "name": "light-mkeditor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack -w",
+    "start": "electron ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmm117/light-mkeditor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gmm117/light-mkeditor/issues"
+  },
+  "homepage": "https://github.com/gmm117/light-mkeditor#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/preset-env": "^7.7.7",
+    "babel-loader": "^8.0.6",
+    "electron": "^7.1.7",
+    "marked": "^0.8.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.7.0"
+  }
+}
