@@ -86,7 +86,7 @@ app.on('ready', () =>{
                 {
                     label : 'GitHub',
                     click : function() {
-                        shell.openExternal('https://github.com/gmm117/MarkdownEditor');
+                        shell.openExternal('https://github.com/gmm117/light-mkeditor');
                     }
                 }
                     
@@ -104,7 +104,7 @@ app.on('ready', () =>{
     });
 
     // 윈도우 창에 로드 할 html 페이지
-    win.loadURL(`file://${__dirname}/index.html`); //작은 따옴표가 아닌  back stick 기호(tab키 위)
+    win.loadURL(`file://${__dirname}/build/index.html`); //작은 따옴표가 아닌  back stick 기호(tab키 위)
     //__dirname : node.js 전역변수이며, 현재 실행중인 코드의 파일 경로를 나타냄
 
     //개발자 도구 오픈

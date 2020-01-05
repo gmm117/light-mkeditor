@@ -1,18 +1,20 @@
 const path = require('path');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   // enntry file
-  entry: ['@babel/polyfill', './src/main.js'],
+  entry: './src/app.js',
   // 컴파일 + 번들링된 js 파일이 저장될 경로와 이름 지정
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js'
+    filename: "bundle.js",
+    path: path.resolve(__dirname + "/build")
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules\/(?![marked])/,
         use: {
             loader: 'babel-loader',
             options: {
@@ -20,10 +22,46 @@ module.exports = {
               plugins: ['@babel/plugin-proposal-class-properties']
             }
         }
+      },
+      {
+        test: /\.(png|jpg|svg)$/,
+        use: [ {
+          loader : 'file-loader',
+          options : {
+            name: './img/[name].[ext]',
+            esModule : false
+          }
+        }],
+      },
+      {
+        test: /\.html$/,
+        use: [
+            {
+                loader: "html-loader",
+                options: { minimize: true }
+            }
+        ]
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: 'css-loader'
+        })
       }
     ]
   },
-  devtool: 'source-map',
-  mode: 'development'
-  //mode : 'production'
+  plugins: [
+    new HtmlWebPackPlugin({
+      template: './public/index.html', // public/index.html 파일을 읽는다.
+      filename: 'index.html', // output으로 출력할 파일은 index.html 이다.
+    }),
+    new ExtractTextPlugin({
+      filename : "index.css",
+    }),
+    new OptimizeCSSAssetsPlugin({})
+  ],
+  // devtool: 'source-map',
+  // mode: 'development'
+  mode : 'production'
 };

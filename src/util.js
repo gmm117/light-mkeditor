@@ -25,15 +25,15 @@ another [Naver][2].
 [2]: https://www.naver.com// "naver"
 
 ---
-Logo: ![Alt](./img/Hong's.png "Title")
+Logo: ![Alt](./img/Hongs.png "Title")
 
 ---
 Logo: ![Alt][3]
 
-[3]: ./img/Hong's.png "Title"
+[3]: ./img/Hongs.png "Title"
 
 ---
-Linked logo: [![alt text](./img/Hong's.png)](https://gmm117.github.io/portfolio/ "Title")
+Linked logo: [![alt text](./img/Hongs.png)](https://gmm117.github.io/portfolio/ "Title")
 
 ---
 * Item
