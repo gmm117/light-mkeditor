@@ -6,7 +6,9 @@
 * Full screen mode
   - Write distraction free.
 * Cross platform
-  - Windows
+  - Windows, Mac, Linux
+* Browser
+  - IE11, Chrome, Safari, Edge
 
 ## How To Use
 
@@ -24,6 +26,9 @@ $ npm install
 
 # webpack Run
 $ npm run build
+
+# webpack-dev-server Run
+$ npm run dev
 
 # webpack deploy
 $ npm run deploy
