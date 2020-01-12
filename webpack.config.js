@@ -65,7 +65,7 @@ module.exports = {
     }),
     new OptimizeCSSAssetsPlugin({})
   ],
-  // devtool: 'source-map',
-  // mode: 'development'
-  mode : 'production'
+  devtool: 'source-map',
+  mode: 'development'
+  // mode : 'production'
 };

@@ -89,31 +89,45 @@ const NumberingExam = " 1. Item ";
 const ImageExam = ` ![Alt Text](link "Title")`;
 const LinkExam = ` [Title](link)`;
 
+function findCaretInfo(childNodes, range, infos) {
+    for (let i = 0; i < childNodes.length; i++) {
+        infos.isEndReturn = false;
+        if (childNodes[i].nodeName === "BR") {
+            infos.rangeCount += 1;
+            infos.startOffset = 0;
+            infos.isText = false;
+            infos.line++;
+        } else if (childNodes[i].nodeType == 3) {
+            infos.rangeCount += childNodes[i].textContent.length;
+            infos.startOffset = range.startOffset;
+            infos.isText = true;
+            infos.line++;
+        } else if(childNodes[i].nodeName === "DIV") {
+            if(childNodes[i].childNodes.length > 0) {
+                findCaretInfo(childNodes[i].childNodes, range, infos);     
+            } else {
+                infos.isEndReturn = true;
+                infos.startOffset = 0;
+                infos.isText = false;
+                infos.line++;
+            }
+        }
+    }
+}
+
 function getCaretPosition(node) {
     let range = window.getSelection().getRangeAt(0),
         preCaretRange = range.cloneRange(),
-        rangeCount = 0,
         tmp = document.createElement("div"),
-        startOffset = 0,
-        isEndHtmlTag = false;
+        infos = {rangeCount : 0, startOffset: 0, line : 0, isText : false, isEndReturn : false};
 
     preCaretRange.selectNodeContents(node);
     preCaretRange.setEnd(range.endContainer, range.endOffset);
     tmp.appendChild(preCaretRange.cloneContents());
-    var childNodes = tmp.childNodes;
-    for (var i = 0; i < childNodes.length; i++) {
-        if (childNodes[i].outerHTML) {
-            rangeCount += childNodes[i].outerHTML.replace(/<br>|<br\/>|<br \/>/g, ' ').length;
-            startOffset = 0;
-            isEndHtmlTag = true;
-        } else if (childNodes[i].nodeType == 3) {
-            rangeCount += childNodes[i].textContent.length;
-            startOffset = range.startOffset;
-            isEndHtmlTag = false;
-        } 
-    }
-
-    return { curPos : startOffset, totPos : rangeCount, line : i === 0 ? i : i-1, isEndHtmlTag : isEndHtmlTag };
+    
+    findCaretInfo(tmp.childNodes, range, infos);
+    
+    return { curPos : infos.startOffset, totPos : infos.rangeCount, line : infos.line, isText : infos.isText, isEndReturn : infos.isEndReturn };
 }
 
 function setCaretPosition(node, line, pos) {

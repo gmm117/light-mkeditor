@@ -7,6 +7,7 @@ export default class main {
         this.that = this;
         this.preview = null;
         this.editor = null;
+        this.editText = "";
 
         this.initialize();
     }
@@ -93,23 +94,35 @@ export default class main {
         }
     }
 
-    updateMarkDownButton(buttonExam) {
-        const {line, curPos, totPos, isEndHtmlTag} = getCaretPosition(this.editor);
-        let text, editText = '';
-        
-        for(let node in this.editor.childNodes) {
-            if(this.editor.childNodes[node].nodeType === 3) {
-                editText += this.editor.childNodes[node].textContent;
-            } else if(this.editor.childNodes[node].nodeType === 1) { // br태그일경우
-                editText += '\n';
+    updateChildText(childNodes) {
+        for(let i in childNodes) {
+            if(childNodes[i].nodeType === 3) {
+                this.editText += childNodes[i].textContent;
+            } else if(childNodes[i].nodeName === "BR") { // br태그일경우
+                this.editText += '\n';
+            } else if(childNodes[i].nodeName === "DIV") {
+                if(childNodes[i].childNodes.length > 0) {
+                    this.updateChildText(childNodes[i].childNodes);
+                } else {
+                    this.editText += '\n';
+                }
             }
         }
-        text = editText.substr(0, totPos) + buttonExam + editText.substr(totPos);
+    }
+
+    updateMarkDownButton(buttonExam) {
+        const {line, curPos, totPos, isText, isEndReturn} = getCaretPosition(this.editor);
+        let text;
+        
+        this.editText = "";
+        this.updateChildText(this.editor.childNodes);
+        
+        text = this.editText.substr(0, totPos) + (isEndReturn ? '\n': '') + buttonExam + this.editText.substr(totPos);
         
         this.updateEditText(text);
         this.updatePreview(text);
 
-        setCaretPosition(this.editor, isEndHtmlTag === true ? line +1 : line, curPos + buttonExam.length);
+        setCaretPosition(this.editor, isText === true ? line - 1: line, curPos + buttonExam.length);
         this.editor.focus();
     }
 

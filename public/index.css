@@ -83,6 +83,7 @@ html, body {
     border: 1px solid #bbbbbb;
     margin : 0 0 0 5px;
     cursor: pointer;
+    background-size: 100%;
 }
 
 .edit_toolbar div.separator {
