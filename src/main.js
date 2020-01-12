@@ -16,8 +16,6 @@ export default class main {
         this.editor = document.getElementById('editor');
         this.preview = document.getElementById('preview');
 
-        this.editor.focus();
-
         if(this.editor !== undefined && this.preview !== undefined) {
             var eventType = /Trident/.test( navigator.userAgent ) ? 'textinput' : 'input';
             this.editor.addEventListener(eventType, this.updateEditChange.bind(this));
@@ -98,9 +96,9 @@ export default class main {
         for(let i in childNodes) {
             if(childNodes[i].nodeType === 3) {
                 this.editText += childNodes[i].textContent;
-            } else if(childNodes[i].nodeName === "BR") { // br태그일경우
+            } else if(childNodes[i].nodeName === "BR") { // br태그일경우(IE일경우 P태그 옴)
                 this.editText += '\n';
-            } else if(childNodes[i].nodeName === "DIV") {
+            } else if(childNodes[i].nodeName === "DIV" || childNodes[i].nodeName === "P") {
                 if(childNodes[i].childNodes.length > 0) {
                     this.updateChildText(childNodes[i].childNodes);
                 } else {
@@ -123,7 +121,6 @@ export default class main {
         this.updatePreview(text);
 
         setCaretPosition(this.editor, isText === true ? line - 1: line, curPos + buttonExam.length);
-        this.editor.focus();
     }
 
     updateEditText(text) {

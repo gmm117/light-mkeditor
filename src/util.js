@@ -102,16 +102,17 @@ function findCaretInfo(childNodes, range, infos) {
             infos.startOffset = range.startOffset;
             infos.isText = true;
             infos.line++;
-        } else if(childNodes[i].nodeName === "DIV") {
+        } else if(childNodes[i].nodeName === "DIV" || childNodes[i].nodeName === "P") {
             if(childNodes[i].childNodes.length > 0) {
                 findCaretInfo(childNodes[i].childNodes, range, infos);     
             } else {
+                infos.rangeCount += 1;
                 infos.isEndReturn = true;
                 infos.startOffset = 0;
                 infos.isText = false;
                 infos.line++;
             }
-        }
+        } 
     }
 }
 
@@ -126,6 +127,10 @@ function getCaretPosition(node) {
     tmp.appendChild(preCaretRange.cloneContents());
     
     findCaretInfo(tmp.childNodes, range, infos);
+
+    if(infos.isEndReturn) { // 마지막 \n일경우 빼주고 innerText할 시 앞에서 추가해주도록 한다.
+        infos.rangeCount -= 1;
+    }
     
     return { curPos : infos.startOffset, totPos : infos.rangeCount, line : infos.line, isText : infos.isText, isEndReturn : infos.isEndReturn };
 }
