@@ -1,5 +1,4 @@
-const markInitText = `
-Type **Hong's Markdown** here.
+const markInitText = `Type **Hong's Markdown** here.
 
 ---
 # Headline 1
@@ -79,39 +78,52 @@ This too
 \`\`\`
 `;
 
-const boldExam = " **Strong** ";
-const italicExam = " *Emphasize* ";
-const H1Exam = " # Headline 1 ";
-const H2Exam = " ## Headline 2 ";
-const H3Exam = " ### Headline 3 ";
-const BulletExam = " * Item ";
-const NumberingExam = " 1. Item ";
-const ImageExam = ` ![Alt Text](link "Title")`;
-const LinkExam = ` [Title](link)`;
+const boldExam = "**Strong**";
+const italicExam = "*Emphasize*";
+const H1Exam = "# Headline 1";
+const H2Exam = "## Headline 2";
+const H3Exam = "### Headline 3";
+const BulletExam = "* Item";
+const NumberingExam = "1. Item";
+const ImageExam = `![Alt Text](link "Title")`;
+const LinkExam = `[Title](link)`;
 
 function findCaretInfo(childNodes, range, infos) {
-    for (let i = 0; i < childNodes.length; i++) {
+    let prevNode, nextNode;
+    for (let node = 0; node < childNodes.length; node++) {
+        nextNode = childNodes[node].nextSibling;
+        prevNode = childNodes[node].previousSibling;
         infos.isEndReturn = false;
-        if (childNodes[i].nodeName === "BR") {
+        if (childNodes[node].nodeName === "BR") {
             infos.rangeCount += 1;
             infos.startOffset = 0;
             infos.isText = false;
             infos.line++;
-        } else if (childNodes[i].nodeType == 3) {
-            infos.rangeCount += childNodes[i].textContent.length;
+        } else if (childNodes[node].nodeType == 3) {
+            infos.rangeCount += childNodes[node].textContent.replace(/(?:\r\n|\r|\n)/g, '\n').length;
             infos.startOffset = range.startOffset;
             infos.isText = true;
             infos.line++;
-        } else if(childNodes[i].nodeName === "DIV" || childNodes[i].nodeName === "P") {
-            if(childNodes[i].childNodes.length > 0) {
-                findCaretInfo(childNodes[i].childNodes, range, infos);     
-            } else {
+
+            // text element후에 바로 div올 경우에는 line break를 추가해줘야해서 아래 예외처리추가
+            if((nextNode && (nextNode.nodeName === "DIV" || nextNode.nodeName === "P")) ||
+                (prevNode && (prevNode.nodeName === "DIV" || prevNode.nodeName === "P"))) {
                 infos.rangeCount += 1;
-                infos.isEndReturn = true;
+                infos.isText = false;
+                infos.line++;
+            }
+        } else if(childNodes[node].nodeName === "DIV" || childNodes[node].nodeName === "P") {
+            if(prevNode && (prevNode.nodeName === "DIV" || prevNode.nodeName === "P")) {
+                infos.rangeCount += 1;
+                infos.isEndReturn = false;
                 infos.startOffset = 0;
                 infos.isText = false;
                 infos.line++;
             }
+
+            if(childNodes[node].childNodes.length > 0) {
+                findCaretInfo(childNodes[node].childNodes, range, infos);
+            } 
         } 
     }
 }
@@ -127,11 +139,7 @@ function getCaretPosition(node) {
     tmp.appendChild(preCaretRange.cloneContents());
     
     findCaretInfo(tmp.childNodes, range, infos);
-
-    if(infos.isEndReturn) { // 마지막 \n일경우 빼주고 innerText할 시 앞에서 추가해주도록 한다.
-        infos.rangeCount -= 1;
-    }
-    
+   
     return { curPos : infos.startOffset, totPos : infos.rangeCount, line : infos.line, isText : infos.isText, isEndReturn : infos.isEndReturn };
 }
 

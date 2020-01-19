@@ -8,6 +8,12 @@ export default class main {
         this.preview = null;
         this.editor = null;
         this.editText = "";
+        
+
+        marked.setOptions({
+            gfm: true,
+            breaks: true
+        });
 
         this.initialize();
     }
@@ -19,6 +25,7 @@ export default class main {
         if(this.editor !== undefined && this.preview !== undefined) {
             var eventType = /Trident/.test( navigator.userAgent ) ? 'textinput' : 'input';
             this.editor.addEventListener(eventType, this.updateEditChange.bind(this));
+            this.editor.addEventListener("keyup", this.updateEditChange.bind(this));
 
             this.initializeButton();    
 
@@ -93,17 +100,30 @@ export default class main {
     }
 
     updateChildText(childNodes) {
-        for(let i in childNodes) {
-            if(childNodes[i].nodeType === 3) {
-                this.editText += childNodes[i].textContent;
-            } else if(childNodes[i].nodeName === "BR") { // br태그일경우(IE일경우 P태그 옴)
-                this.editText += '\n';
-            } else if(childNodes[i].nodeName === "DIV" || childNodes[i].nodeName === "P") {
-                if(childNodes[i].childNodes.length > 0) {
-                    this.updateChildText(childNodes[i].childNodes);
-                } else {
+        let prevNode, nextNode;
+        for(let node = 0; node < childNodes.length; node++) {
+            nextNode = childNodes[node].nextSibling;
+            prevNode = childNodes[node].previousSibling;
+            if(childNodes[node].nodeType === 3) {
+                if(prevNode && (prevNode.nodeName === "DIV" || prevNode.nodeName === "P")) {
                     this.editText += '\n';
                 }
+
+                this.editText += childNodes[node].textContent.replace(/(?:\r\n|\r|\n)/g, '\n');
+
+                if(nextNode && (nextNode.nodeName === "DIV" || nextNode.nodeName === "P")) {
+                    this.editText += '\n';
+                }
+            } else if(childNodes[node].nodeName === "BR") { // br태그일경우(IE일경우 P태그 옴)
+                this.editText += '\n';
+            } else if(childNodes[node].nodeName === "DIV" || childNodes[node].nodeName === "P") {
+                if(prevNode && (prevNode.nodeName === "DIV" || prevNode.nodeName === "P")) {
+                    this.editText += '\n';
+                }
+
+                if(childNodes[node].childNodes.length > 0) {
+                    this.updateChildText(childNodes[node].childNodes);
+                } 
             }
         }
     }
@@ -111,11 +131,17 @@ export default class main {
     updateMarkDownButton(buttonExam) {
         const {line, curPos, totPos, isText, isEndReturn} = getCaretPosition(this.editor);
         let text;
-        
+
         this.editText = "";
+        // ie브라우저 일경우 enter키의 \r\n 중북으로 들어와서 따로 처리함.
+        // if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (navigator.userAgent.toLowerCase().indexOf("msie") != -1) ) {
+        //     this.updateChildText(this.editor.childNodes);
+        // } else {
+        //     this.editText = this.editor.outerText.replace(/(?:\r\n|\r|\n)/g, '\n');
+        // }
         this.updateChildText(this.editor.childNodes);
-        
-        text = this.editText.substr(0, totPos) + (isEndReturn ? '\n': '') + buttonExam + this.editText.substr(totPos);
+ 
+        text = this.editText.substr(0, totPos) + buttonExam + this.editText.substr(totPos);
         
         this.updateEditText(text);
         this.updatePreview(text);
@@ -132,7 +158,7 @@ export default class main {
     }
 
     updateEditChange(e) {
-        this.updatePreview(e.target.innerText);
+        this.updatePreview(this.editor.innerText);
     }
 }
 
