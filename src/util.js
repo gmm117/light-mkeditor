@@ -1,3 +1,5 @@
+import Hongs from '../img/Hongs.png';
+
 const markInitText = `Type **Hong's Markdown** here.
 
 ---
@@ -24,15 +26,15 @@ another [Naver][2].
 [2]: https://www.naver.com// "naver"
 
 ---
-Logo: ![Alt](./img/Hongs.png "Title")
+Logo: ![Alt](${Hongs} "Title")
 
 ---
 Logo: ![Alt][3]
 
-[3]: ./img/Hongs.png "Title"
+[3]: ${Hongs} "Title"
 
 ---
-Linked logo: [![alt text](./img/Hongs.png)](https://gmm117.github.io/portfolio/ "Title")
+Linked logo: [![alt text](${Hongs})](https://gmm117.github.io/portfolio/ "Title")
 
 ---
 * Item

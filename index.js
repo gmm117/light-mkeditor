@@ -2,8 +2,6 @@
 const {app, BrowserWindow, shell, Menu} = require('electron');
 let win;
 
-
-
 app.on('ready', () =>{
     win = new BrowserWindow(
         {

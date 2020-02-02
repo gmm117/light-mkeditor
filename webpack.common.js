@@ -1,4 +1,5 @@
 const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
@@ -31,7 +32,7 @@ module.exports = {
         use: [ {
           loader : 'file-loader',
           options : {
-            name: './img/[name].[ext]',
+            name: '[path][contenthash].[ext]',
             esModule : false
           }
         }],
@@ -51,6 +52,13 @@ module.exports = {
           fallback: "style-loader",
           use: 'css-loader'
         })
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: ['css-loader', "sass-loader"]
+        })
       }
     ]
   },
@@ -61,8 +69,9 @@ module.exports = {
       filename: 'index.html', // output으로 출력할 파일은 index.html 이다.
     }),
     new ExtractTextPlugin({
-      filename : "index.css",
+      filename : '[chunkhash].css'
     }),
-    new OptimizeCSSAssetsPlugin({})
+    new OptimizeCSSAssetsPlugin({}),
+    new CleanWebpackPlugin()
   ]
 };
