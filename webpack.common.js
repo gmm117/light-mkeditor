@@ -9,7 +9,7 @@ module.exports = {
   entry: './src/app.js',
   // 컴파일 + 번들링된 js 파일이 저장될 경로와 이름 지정
   output: {
-    filename: "bundle.js",
+    filename: "[name].[chunkhash].js",
     path: path.resolve(__dirname + "/build")
   },
   stats: {
@@ -32,7 +32,7 @@ module.exports = {
         use: [ {
           loader : 'file-loader',
           options : {
-            name: '[path][contenthash].[ext]',
+            name: '[path][hash].[ext]',
             esModule : false
           }
         }],
@@ -69,7 +69,7 @@ module.exports = {
       filename: 'index.html', // output으로 출력할 파일은 index.html 이다.
     }),
     new ExtractTextPlugin({
-      filename : '[chunkhash].css'
+      filename : '[hash].css'
     }),
     new OptimizeCSSAssetsPlugin({}),
     new CleanWebpackPlugin()
