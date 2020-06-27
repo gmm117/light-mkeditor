@@ -14,8 +14,13 @@
     "type": "git",
     "url": "git+https://github.com/gmm117/light-mkeditor.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "javascript",
+    "electron",
+    "webpack",
+    "babel"
+  ],
+  "author": "gmm117",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/gmm117/light-mkeditor/issues"
